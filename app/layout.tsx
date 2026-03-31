@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Đinh Tiến Đô — Frontend Developer",
+  title: "Đinh Tiến Độ — Frontend Developer",
   description: "CV, Study Roadmap & Interview Preparation",
 };
 
@@ -30,9 +30,7 @@ export default function RootLayout({
     >
       <body className="h-full flex bg-gray-50">
         <Sidebar />
-        <main className="flex-1 min-h-screen overflow-auto">
-          {children}
-        </main>
+        <main className="flex-1 min-h-screen overflow-auto">{children}</main>
       </body>
     </html>
   );

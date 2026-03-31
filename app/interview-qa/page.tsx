@@ -2,13 +2,26 @@
 
 import { useState } from "react";
 
-type QA = { q: string; a: string | string[] | TableRow[] | { type: "table"; headers: string[]; rows: string[][] } };
+type QA = {
+  q: string;
+  a:
+    | string
+    | string[]
+    | TableRow[]
+    | { type: "table"; headers: string[]; rows: string[][] };
+};
 type TableRow = never;
 
 type Section = {
   id: string;
   title: string;
-  items: { q: string; a: string | string[] | { type: "table"; headers: string[]; rows: string[][] } }[];
+  items: {
+    q: string;
+    a:
+      | string
+      | string[]
+      | { type: "table"; headers: string[]; rows: string[][] };
+  }[];
 };
 
 const sections: Section[] = [
@@ -18,7 +31,7 @@ const sections: Section[] = [
     items: [
       {
         q: "Hãy giới thiệu về bản thân và kinh nghiệm của bạn?",
-        a: "Tôi là Đinh Tiến Đô, Frontend Developer với hơn 4 năm kinh nghiệm xây dựng các ứng dụng web scalable, high-performance. Tôi chuyên sâu về React/Next.js, với kinh nghiệm thực tế ở nhiều domain khác nhau: crypto trading (ONUS Labs), energy platform (FPT Software – LGCNS Korea), financial analytics (VNEXT – FiinGroup), và fullstack (AMELA Technology). Gần nhất tôi đã contribute vào nền tảng giao dịch crypto Goonus.io phục vụ 7M+ users, tập trung vào real-time data, performance optimization và scalable architecture.",
+        a: "Tôi là Đinh Tiến Độ, Frontend Developer với hơn 4 năm kinh nghiệm xây dựng các ứng dụng web scalable, high-performance. Tôi chuyên sâu về React/Next.js, với kinh nghiệm thực tế ở nhiều domain khác nhau: crypto trading (ONUS Labs), energy platform (FPT Software – LGCNS Korea), financial analytics (VNEXT – FiinGroup), và fullstack (AMELA Technology). Gần nhất tôi đã contribute vào nền tảng giao dịch crypto Goonus.io phục vụ 7M+ users, tập trung vào real-time data, performance optimization và scalable architecture.",
       },
     ],
   },
@@ -289,15 +302,29 @@ const sections: Section[] = [
   },
 ];
 
-function AnswerContent({ answer }: { answer: string | string[] | { type: "table"; headers: string[]; rows: string[][] } }) {
+function AnswerContent({
+  answer,
+}: {
+  answer:
+    | string
+    | string[]
+    | { type: "table"; headers: string[]; rows: string[][] };
+}) {
   if (typeof answer === "string") {
-    return <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed">{answer}</p>;
+    return (
+      <p className="text-zinc-600 dark:text-zinc-300 text-sm leading-relaxed">
+        {answer}
+      </p>
+    );
   }
   if (Array.isArray(answer)) {
     return (
       <ul className="space-y-1.5">
         {answer.map((item, i) => (
-          <li key={i} className="flex gap-2 text-sm text-zinc-600 dark:text-zinc-300">
+          <li
+            key={i}
+            className="flex gap-2 text-sm text-zinc-600 dark:text-zinc-300"
+          >
             <span className="text-blue-500 shrink-0 mt-0.5">▸</span>
             <span>{item}</span>
           </li>
@@ -317,9 +344,24 @@ function QAItem({ item }: { item: Section["items"][0] }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-start justify-between gap-4 p-4 text-left hover:bg-zinc-50 dark:hover:bg-zinc-750 transition-colors"
       >
-        <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 leading-snug">{item.q}</span>
-        <span className={`text-zinc-400 shrink-0 mt-0.5 transition-transform ${open ? "rotate-180" : ""}`}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200 leading-snug">
+          {item.q}
+        </span>
+        <span
+          className={`text-zinc-400 shrink-0 mt-0.5 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </span>
@@ -342,8 +384,21 @@ function SectionBlock({ section }: { section: Section }) {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 mb-3 text-left group"
       >
-        <span className={`text-zinc-400 transition-transform ${open ? "rotate-90" : ""}`}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <span
+          className={`text-zinc-400 transition-transform ${
+            open ? "rotate-90" : ""
+          }`}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </span>
@@ -369,15 +424,21 @@ export default function InterviewQA() {
   const [search, setSearch] = useState("");
 
   const filtered = search.trim()
-    ? sections.map((s) => ({
-        ...s,
-        items: s.items.filter(
-          (item) =>
-            item.q.toLowerCase().includes(search.toLowerCase()) ||
-            (typeof item.a === "string" && item.a.toLowerCase().includes(search.toLowerCase())) ||
-            (Array.isArray(item.a) && item.a.some((a) => a.toLowerCase().includes(search.toLowerCase())))
-        ),
-      })).filter((s) => s.items.length > 0)
+    ? sections
+        .map((s) => ({
+          ...s,
+          items: s.items.filter(
+            (item) =>
+              item.q.toLowerCase().includes(search.toLowerCase()) ||
+              (typeof item.a === "string" &&
+                item.a.toLowerCase().includes(search.toLowerCase())) ||
+              (Array.isArray(item.a) &&
+                item.a.some((a) =>
+                  a.toLowerCase().includes(search.toLowerCase())
+                ))
+          ),
+        }))
+        .filter((s) => s.items.length > 0)
     : sections;
 
   const totalQuestions = sections.reduce((acc, s) => acc + s.items.length, 0);
@@ -386,7 +447,9 @@ export default function InterviewQA() {
     <div className="p-8 max-w-3xl">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Interview Q&amp;A</h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Interview Q&amp;A
+        </h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
           {totalQuestions} câu hỏi • {sections.length} sections
         </p>
@@ -396,9 +459,17 @@ export default function InterviewQA() {
       <div className="relative mb-6">
         <svg
           className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
-          width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
         <input
           type="text"
@@ -412,13 +483,27 @@ export default function InterviewQA() {
       {/* Tips banner */}
       {!search && (
         <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-          <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-2">Mẹo khi phỏng vấn</p>
+          <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-2">
+            Mẹo khi phỏng vấn
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-amber-600 dark:text-amber-300">
             {[
-              ["Câu hỏi technical khó", "Nói to suy nghĩ, đừng im lặng. Interviewer đánh giá cả process"],
-              ["Câu hỏi bạn không biết", '"Tôi chưa dùng cái đó nhưng tôi sẽ approach theo hướng..."'],
-              ["Câu hỏi về điểm yếu", "Chọn điểm yếu thật nhưng đang cải thiện"],
-              ["Câu hỏi về conflict", "Dùng STAR method: Situation, Task, Action, Result"],
+              [
+                "Câu hỏi technical khó",
+                "Nói to suy nghĩ, đừng im lặng. Interviewer đánh giá cả process",
+              ],
+              [
+                "Câu hỏi bạn không biết",
+                '"Tôi chưa dùng cái đó nhưng tôi sẽ approach theo hướng..."',
+              ],
+              [
+                "Câu hỏi về điểm yếu",
+                "Chọn điểm yếu thật nhưng đang cải thiện",
+              ],
+              [
+                "Câu hỏi về conflict",
+                "Dùng STAR method: Situation, Task, Action, Result",
+              ],
             ].map(([situation, advice]) => (
               <div key={situation}>
                 <span className="font-medium">{situation}:</span> {advice}
@@ -430,7 +515,9 @@ export default function InterviewQA() {
 
       {/* Sections */}
       {filtered.length === 0 ? (
-        <p className="text-sm text-zinc-400 text-center py-8">Không tìm thấy kết quả.</p>
+        <p className="text-sm text-zinc-400 text-center py-8">
+          Không tìm thấy kết quả.
+        </p>
       ) : (
         filtered.map((section) => (
           <SectionBlock key={section.id} section={section} />
