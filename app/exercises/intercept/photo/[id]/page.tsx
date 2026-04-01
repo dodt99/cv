@@ -4,7 +4,7 @@ import { PHOTOS } from "@/app/exercises/intercept/page";
 import { notFound } from "next/navigation";
 
 export function generateStaticParams() {
-  return PHOTOS.map((p) => ({ id: p.id }));
+  return ["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((id) => ({ id }));
 }
 
 export default function PhotoFullPage({ params }: { params: Promise<{ id: string }> }) {
