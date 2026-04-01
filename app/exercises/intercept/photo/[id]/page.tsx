@@ -3,6 +3,10 @@ import Link from "next/link";
 import { PHOTOS } from "@/app/exercises/intercept/page";
 import { notFound } from "next/navigation";
 
+export function generateStaticParams() {
+  return PHOTOS.map((p) => ({ id: p.id }));
+}
+
 export default function PhotoFullPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const photo = PHOTOS.find((p) => p.id === id);
