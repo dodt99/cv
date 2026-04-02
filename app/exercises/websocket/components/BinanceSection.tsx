@@ -3,8 +3,8 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
 interface Trade {
-  price: number;
-  qty: number;
+  price: string;
+  qty: string;
   time: number;
   isBuyerMaker: boolean;
 }
@@ -24,8 +24,8 @@ ws.onmessage = (e) => {
 
 export function BinanceSection() {
   const [running, setRunning] = useState(false);
-  const [price, setPrice] = useState<number | null>(null);
-  const [prevPrice, setPrevPrice] = useState<number | null>(null);
+  const [price, setPrice] = useState<string | null>(null);
+  const [prevPrice, setPrevPrice] = useState<string | null>(null);
   const [trade, setTrade] = useState<Trade | null>(null);
   const [msgCount, setMsgCount] = useState(0);
   const [msgPerSec, setMsgPerSec] = useState(0);
@@ -48,8 +48,8 @@ export function BinanceSection() {
 
     ws.onmessage = (e) => {
       const d = JSON.parse(e.data);
-      const p = parseFloat(d.p);
-      const q = parseFloat(d.q);
+      const p: string = d.p;
+      const q: string = d.q;
       setPrevPrice((prev) => prev ?? p);
       setPrice((prev) => { setPrevPrice(prev); return p; });
       setTrade({ price: p, qty: q, time: d.T, isBuyerMaker: d.m });
@@ -74,7 +74,7 @@ export function BinanceSection() {
   useEffect(() => () => { wsRef.current?.close(); }, []);
 
   const priceDir = price !== null && prevPrice !== null
-    ? price > prevPrice ? "up" : price < prevPrice ? "down" : "same"
+    ? parseFloat(price) > parseFloat(prevPrice) ? "up" : parseFloat(price) < parseFloat(prevPrice) ? "down" : "same"
     : "same";
 
   return (
@@ -125,7 +125,7 @@ export function BinanceSection() {
                 priceDir === "up"   ? "text-green-600" :
                 priceDir === "down" ? "text-red-500"   : "text-gray-800"
               }`}>
-                ${price.toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ${parseFloat(price).toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
               <span className={`text-lg mb-0.5 ${priceDir === "up" ? "text-green-500" : priceDir === "down" ? "text-red-400" : "text-gray-300"}`}>
                 {priceDir === "up" ? "▲" : priceDir === "down" ? "▼" : "—"}
@@ -137,7 +137,7 @@ export function BinanceSection() {
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3 bg-gray-50 rounded-xl">
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Qty</p>
-                <p className="text-sm font-mono text-gray-700">{trade?.qty.toFixed(5) ?? "—"}</p>
+                <p className="text-sm font-mono text-gray-700">{trade ? parseFloat(trade.qty).toFixed(5) : "—"}</p>
               </div>
               <div className="p-3 bg-gray-50 rounded-xl">
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Side</p>
