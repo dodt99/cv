@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export function SectionHeader({
   badge,
   title,
@@ -27,7 +29,7 @@ export function ConceptCard({
 }: {
   color: "blue" | "emerald" | "violet" | "amber" | "rose";
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const colors = {
     blue: "border-blue-200 bg-blue-50/40",
