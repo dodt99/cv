@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(pnpm add:*)",
+      "Bash(npm view:*)",
+      "Bash(timeout 5 node server/ws-server.js)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(grep -E '\\\\.\\(js|json\\)$')",
+      "Bash(timeout 5 node server/socketio-server.js)",
+      "Bash(echo \"exit code: $?\")",
+      "Bash(pnpm build:*)"
+    ]
+  }
+}
