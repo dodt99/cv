@@ -89,9 +89,9 @@ export function BatchingSection() {
 }
 
 // ─── BatchingDemo ─────────────────────────────────────────────────────────────
-// useEffect([a, b, c]) fires once per committed render that changed a, b, or c.
-// Batched: all 3 update in 1 commit → effect fires once → 1 log line.
-// flushSync: each update is its own commit → effect fires 3 times → 3 log lines.
+// Demo approach: local variable tracking (no useEffect/useRef).
+// Batched: all setA/setB/setC/setLogs are batched into 1 React commit → 1 log entry.
+// flushSync: each flushSync forces its own synchronous commit → 3 log entries.
 
 function BatchingDemo() {
   const [a, setA] = useState(0);
@@ -186,7 +186,7 @@ function BatchingDemo() {
               </div>
             ))}
             <div className="mt-1 border-t border-gray-700 pt-1 text-yellow-400">
-              Total committed renders: {logs.length}
+              flushSync commits triggered: {logs.length}
             </div>
           </>
         )}
