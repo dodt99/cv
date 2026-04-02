@@ -22,9 +22,9 @@ export function FiberSection() {
         <ConceptCard color="violet" title="Two Trees">
           <p className="text-xs text-gray-500 leading-relaxed">
             React maintains two trees:{" "}
-            <strong className="text-gray-700">current</strong> (what's on
+            <strong className="text-gray-700">current</strong> (what&apos;s on
             screen) and{" "}
-            <strong className="text-gray-700">work-in-progress</strong> (what's
+            <strong className="text-gray-700">work-in-progress</strong> (what&apos;s
             being built). On commit, they swap roles.
           </p>
         </ConceptCard>
