@@ -25,10 +25,12 @@ app/
             ├── ReconnectSection.tsx        # Auto-reconnect with backoff demo
             ├── BinanceSection.tsx          # Live BTC/USDT feed from Binance public WS
             ├── HookSection.tsx             # useWebSocket hook source + usage example
-            └── ChallengeSection.tsx        # Mini chat room against local ws-server.js
+            ├── ChallengeSection.tsx        # Mini chat room against local ws-server.js
+            └── SocketIOSection.tsx         # Socket.io chat + side-by-side comparison
 
 server/
-└── ws-server.js                            # Local Node.js ws server (port 3001)
+├── ws-server.js                            # Local Node.js ws server (port 3001)
+└── socketio-server.js                      # Socket.io server (port 3002)
 ```
 
 ---
@@ -48,6 +50,7 @@ server/
 │ § Binance  │  Section 5: Binance feed               │
 │ § Hook     │  Section 6: useWebSocket hook          │
 │ § Challenge│  Section 7: Mini chat                  │
+│ § Socket.io│  Section 8: Socket.io vs Raw WS        │
 └────────────┴────────────────────────────────────────┘
 ```
 
@@ -149,11 +152,31 @@ Server → Client:
 - Track connected clients count; broadcast `user_count` on connect/disconnect
 - Handle `connection`, `message`, `close`, `error` events cleanly
 
-**Start script** added to `package.json`:
+**Start scripts** added to `package.json`:
 ```json
-"ws": "node server/ws-server.js"
+"ws": "node server/ws-server.js",
+"ws:io": "node server/socketio-server.js"
 ```
-Run with: `pnpm ws`
+Run with: `pnpm ws` (port 3001) and `pnpm ws:io` (port 3002)
+
+### §8 Socket.io vs Raw WebSocket
+**Demo:** The same mini-chat room from §7, rebuilt with Socket.io. Side-by-side code comparison.
+
+- Add a second server entry point: `server/socketio-server.js` on port `3002`
+- Socket.io client connects to `http://localhost:3002`
+- Same chat UX as §7 — username, message list, send, online count
+- Comparison table showing what Socket.io gives for free vs what you wrote manually in §7:
+
+| Feature | Raw WS (§7) | Socket.io (§8) |
+|---|---|---|
+| Reconnection | You wrote it | Automatic |
+| Rooms / namespaces | Manual | Built-in |
+| Event names | Manual JSON `type` field | `socket.on("chat", ...)` |
+| Fallback transport | None | HTTP long-poll fallback |
+| Binary support | Manual | Built-in |
+| Acknowledgements | Manual | Built-in |
+
+**Key insight card:** Socket.io is not "better WebSocket" — it's a higher-level abstraction. Understanding raw WS (§2–§7) is what makes Socket.io feel like a shortcut rather than magic.
 
 ---
 
@@ -170,6 +193,6 @@ Add a new nav item to `app/components/Sidebar.tsx` under the "Exercises" group:
 ## Constraints
 
 - **Vercel deployment:** The local `ws-server.js` is for local development only. §3, §7 gracefully show a "server not running" hint when `ws://localhost:3001` is unreachable. §2 and §5 work fully without the local server.
-- **No new npm packages on the frontend** beyond what's already installed (`ws` is added as a dev dependency for the server only).
+- **npm packages added:** `ws` for the raw WS server, `socket.io` for the Socket.io server, `socket.io-client` for the frontend §8 demo.
 - **Styling:** Tailwind CSS v4, consistent with existing exercise pages.
 - **No test suite** — consistent with project conventions.
