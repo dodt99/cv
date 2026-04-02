@@ -60,7 +60,6 @@ const ACTIVE_COLORS: Record<string, string> = {
 
 export function PhasesSection() {
   const [activeStep, setActiveStep] = useState(-1);
-  const [logs, setLogs] = useState<string[]>([]);
   const running = activeStep >= 0 && activeStep < STEPS.length - 1;
 
   // Auto-advance to next step every 700 ms
@@ -70,14 +69,10 @@ export function PhasesSection() {
     return () => clearTimeout(id);
   }, [activeStep]);
 
-  // Append log line when a new step becomes active
-  useEffect(() => {
-    if (activeStep < 0) return;
-    setLogs((prev) => [...prev, STEPS[activeStep].log]);
-  }, [activeStep]);
+  // Derive logs from activeStep
+  const logs = activeStep < 0 ? [] : Array.from(STEPS.slice(0, activeStep + 1), (s) => s.log);
 
   function handleTrigger() {
-    setLogs([]);
     setActiveStep(0);
   }
 
