@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { useWebSocket } from "./useWebSocket";
 
-const HOOK_SOURCE = `export function useWebSocket(url: string) {
+const HOOK_SOURCE = `// Simplified — see useWebSocket.ts for full version with cleanup
+export function useWebSocket(url: string) {
   const [status, setStatus] = useState<WsStatus>("idle");
   const [messages, setMessages] = useState<WsMessage[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const attemptRef = useRef(0);
+  const msgIdRef = useRef(0);
   const shouldReconnectRef = useRef(false);
+  const unmountedRef = useRef(false);
 
   const connect = useCallback(() => {
     if (wsRef.current) return;
@@ -21,29 +24,41 @@ const HOOK_SOURCE = `export function useWebSocket(url: string) {
     ws.onopen  = () => { attemptRef.current = 0; setStatus("open"); };
     ws.onerror = () => { /* onclose always follows */ };
     ws.onmessage = (e) => {
+      if (unmountedRef.current) return;
       setMessages((prev) => [...prev.slice(-99),
         { id: msgIdRef.current++, data: e.data, timestamp: Date.now() }
       ]);
     };
     ws.onclose = () => {
+      if (unmountedRef.current) return;
       wsRef.current = null;
       if (!shouldReconnectRef.current) { setStatus("closed"); return; }
       const delay = Math.min(1000 * 2 ** attemptRef.current, 16_000);
       attemptRef.current++;
       setStatus("reconnecting");
-      reconnectTimerRef.current = setTimeout(connect, delay);
+      reconnectTimerRef.current = setTimeout(() => {
+        if (!unmountedRef.current && shouldReconnectRef.current) connect();
+      }, delay);
     };
   }, [url]);
 
   const disconnect = useCallback(() => {
     shouldReconnectRef.current = false;
-    clearTimeout(reconnectTimerRef.current);
+    if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
     wsRef.current ? (setStatus("closing"), wsRef.current.close())
                   : setStatus("idle");
   }, []);
 
   const send = useCallback((data: string) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) wsRef.current.send(data);
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => () => {
+    unmountedRef.current = true;
+    shouldReconnectRef.current = false;
+    if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
+    wsRef.current?.close();
   }, []);
 
   return { status, messages, send, connect, disconnect };

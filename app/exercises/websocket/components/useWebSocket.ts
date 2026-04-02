@@ -34,12 +34,12 @@ export function useWebSocket(url: string): UseWebSocketReturn {
   const shouldReconnectRef = useRef(false);
   const unmountedRef = useRef(false);
 
-  const clearReconnect = () => {
+  const clearReconnect = useCallback(() => {
     if (reconnectTimerRef.current) {
       clearTimeout(reconnectTimerRef.current);
       reconnectTimerRef.current = null;
     }
-  };
+  }, []);
 
   const connect = useCallback(() => {
     if (wsRef.current) return;
