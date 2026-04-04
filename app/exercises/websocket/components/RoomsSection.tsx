@@ -110,13 +110,15 @@ function RoomsDemo() {
 
   useEffect(() => () => { socketRef.current?.disconnect(); }, []);
 
-  const addMsg = (msg: Omit<RoomMessage, "id">) => {
+  const addMsg = useCallback((msg: Omit<RoomMessage, "id">) => {
     setMessages((prev) => [...prev.slice(-199), { ...msg, id: idRef.current++ }]);
-  };
+  }, []);
 
   const connect = useCallback(() => {
+    if (socketRef.current?.connected) return;
     if (!username.trim()) return;
     usernameRef.current = username.trim();
+    setServerHint(false);
     const socket = io("http://localhost:3003", { transports: ["websocket"] });
     socketRef.current = socket;
 
