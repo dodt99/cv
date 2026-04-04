@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "ws": "node server/ws-server.js",
-    "ws:io": "node server/socketio-server.js"
+    "ws:io": "node server/socketio-server.js",
+    "ws:rooms": "node server/socketio-rooms.js"
   },
   "dependencies": {
     "highlight.js": "^11.11.1",
