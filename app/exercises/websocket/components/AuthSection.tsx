@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 
 // ── Constants ──────────────────────────────────────────────────────────────────
@@ -75,14 +75,18 @@ function AuthDemo() {
   const [serverDown, setServerDown] = useState(false);
   const socketRef = useRef<Socket | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const loadingRef = useRef<string | null>(null);
 
-  const appendLog = (line: string) => {
+  useEffect(() => () => { socketRef.current?.disconnect(); }, []);
+
+  const appendLog = useCallback((line: string) => {
     setLog((prev) => [...prev.slice(-49), line]);
     setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
-  };
+  }, []);
 
   const tryScenario = useCallback((label: string, token: string | undefined) => {
-    if (loading) return;
+    if (loadingRef.current) return;
+    loadingRef.current = label;
     setLoading(label);
     setServerDown(false);
 
@@ -102,6 +106,7 @@ function AuthDemo() {
 
     socket.on("authenticated", (user: { username: string; role: string }) => {
       appendLog(`✓ Authenticated — ${user.username} (role: ${user.role})`);
+      loadingRef.current = null;
       setLoading(null);
     });
 
@@ -115,10 +120,11 @@ function AuthDemo() {
         appendLog(`✗ Could not reach server — is pnpm ws:auth running?`);
         setServerDown(true);
       }
+      loadingRef.current = null;
       setLoading(null);
       socket.disconnect();
     });
-  }, [loading]);
+  }, [appendLog]);
 
   return (
     <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
@@ -128,7 +134,7 @@ function AuthDemo() {
           <button
             key={label}
             onClick={() => tryScenario(label, token)}
-            disabled={loading === label}
+            disabled={!!loading}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all disabled:opacity-50 ${
               color === "green"
                 ? "bg-green-600 hover:bg-green-700 text-white"
