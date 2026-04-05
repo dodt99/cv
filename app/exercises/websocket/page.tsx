@@ -9,16 +9,28 @@ import { BinanceSection } from "./components/BinanceSection";
 import { HookSection } from "./components/HookSection";
 import { ChallengeSection } from "./components/ChallengeSection";
 import { SocketIOSection } from "./components/SocketIOSection";
+import { RoomsSection } from "./components/RoomsSection";
+import { AuthSection } from "./components/AuthSection";
 
 const NAV_SECTIONS = [
-  { id: "theory",    label: "§1 Theory" },
-  { id: "raw-api",   label: "§2 Raw API" },
-  { id: "backend",   label: "§3 Backend" },
-  { id: "reconnect", label: "§4 Reconnection" },
-  { id: "binance",   label: "§5 Binance Feed" },
-  { id: "hook",      label: "§6 useWebSocket" },
-  { id: "challenge", label: "§7 Challenge" },
-  { id: "socketio",  label: "§8 Socket.io" },
+  { id: "theory",      label: "§1 Theory" },
+  { id: "raw-api",     label: "§2 Raw API" },
+  { id: "backend",     label: "§3 Backend" },
+  { id: "reconnect",   label: "§4 Reconnection" },
+  { id: "binance",     label: "§5 Binance Feed" },
+  { id: "hook",        label: "§6 useWebSocket" },
+  { id: "challenge",   label: "§7 Challenge" },
+  { id: "socketio",    label: "§8 Socket.io" },
+  { id: "rooms",       label: "§9 Rooms & NS" },
+  { id: "ack",         label: "§10 Acknowledgements" },
+  { id: "presence",    label: "§11 Typing / Presence" },
+  { id: "auth",        label: "§12 Auth Middleware" },
+  { id: "volatile",    label: "§13 Volatile Events" },
+  { id: "recovery",    label: "§14 State Recovery" },
+  { id: "ratelimit",   label: "§15 Rate Limiting" },
+  { id: "redis",       label: "§16 Redis Adapter" },
+  { id: "binary",      label: "§17 Binary Data" },
+  { id: "parser",      label: "§18 Custom Parsers" },
 ];
 
 export default function WebSocketPage() {
@@ -91,8 +103,36 @@ export default function WebSocketPage() {
           <HookSection />
           <ChallengeSection />
           <SocketIOSection />
+          <RoomsSection />
+          <ComingSoon id="ack"       badge="§10" title="Acknowledgements"           desc="Request-reply pattern with timeout handling for reliable delivery." />
+          <ComingSoon id="presence"  badge="§11" title="Typing Indicators & Presence" desc="Debounced typing events, broadcast vs emit, online/offline state." />
+          <AuthSection />
+          <ComingSoon id="volatile"  badge="§13" title="Volatile Events"            desc="socket.volatile.emit() — when to drop events vs guarantee delivery." />
+          <ComingSoon id="recovery"  badge="§14" title="Connection State Recovery"  desc="Socket.io v4.6+ buffering and replaying missed events on reconnect." />
+          <ComingSoon id="ratelimit" badge="§15" title="Rate Limiting & Backpressure" desc="Defending against flooding; detecting and handling slow consumers." />
+          <ComingSoon id="redis"     badge="§16" title="Redis Adapter"              desc="Scaling to multiple Node processes with @socket.io/redis-adapter." />
+          <ComingSoon id="binary"    badge="§17" title="Binary Data"               desc="Sending ArrayBuffers and Blobs instead of JSON for performance." />
+          <ComingSoon id="parser"    badge="§18" title="Custom Parsers (msgpack)"   desc="Replacing JSON with msgpack for smaller payloads and faster parsing." />
         </div>
       </div>
     </div>
+  );
+}
+
+function ComingSoon({ id, badge, title, desc }: { id: string; badge: string; title: string; desc: string }) {
+  return (
+    <section id={id} className="mb-16 scroll-mt-4">
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-[10px] font-bold bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full">{badge}</span>
+          <h2 className="text-lg font-bold text-gray-400">{title}</h2>
+        </div>
+        <p className="text-sm text-gray-400">{desc}</p>
+      </div>
+      <div className="flex items-center gap-3 p-5 rounded-xl border border-dashed border-gray-200 bg-gray-50">
+        <div className="w-2 h-2 rounded-full bg-gray-300 shrink-0" />
+        <p className="text-xs text-gray-400">Not implemented yet — coming soon.</p>
+      </div>
+    </section>
   );
 }
