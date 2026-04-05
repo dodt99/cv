@@ -9,7 +9,8 @@
     "lint": "eslint",
     "ws": "node server/ws-server.js",
     "ws:io": "node server/socketio-server.js",
-    "ws:rooms": "node server/socketio-rooms.js"
+    "ws:rooms": "node server/socketio-rooms.js",
+    "ws:auth": "node server/socketio-auth.js"
   },
   "dependencies": {
     "highlight.js": "^11.11.1",
