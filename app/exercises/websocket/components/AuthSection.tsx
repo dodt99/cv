@@ -77,54 +77,63 @@ function AuthDemo() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const loadingRef = useRef<string | null>(null);
 
-  useEffect(() => () => { socketRef.current?.disconnect(); }, []);
+  useEffect(
+    () => () => {
+      socketRef.current?.disconnect();
+    },
+    []
+  );
 
   const appendLog = useCallback((line: string) => {
     setLog((prev) => [...prev.slice(-49), line]);
-    setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+    // setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
   }, []);
 
-  const tryScenario = useCallback((label: string, token: string | undefined) => {
-    if (loadingRef.current) return;
-    loadingRef.current = label;
-    setLoading(label);
-    setServerDown(false);
+  const tryScenario = useCallback(
+    (label: string, token: string | undefined) => {
+      if (loadingRef.current) return;
+      loadingRef.current = label;
+      setLoading(label);
+      setServerDown(false);
 
-    // Disconnect any previous attempt
-    socketRef.current?.disconnect();
-    socketRef.current = null;
+      // Disconnect any previous attempt
+      socketRef.current?.disconnect();
+      socketRef.current = null;
 
-    const authPayload = token !== undefined ? { token } : {};
-    const socket = io("http://localhost:3004", {
-      auth: authPayload,
-      transports: ["websocket"],
-      reconnection: false,
-    });
-    socketRef.current = socket;
+      const authPayload = token !== undefined ? { token } : {};
+      const socket = io("http://localhost:3004", {
+        auth: authPayload,
+        transports: ["websocket"],
+        reconnection: false,
+      });
+      socketRef.current = socket;
 
-    appendLog(`→ Attempting: "${label}"…`);
+      appendLog(`→ Attempting: "${label}"…`);
 
-    socket.on("authenticated", (user: { username: string; role: string }) => {
-      appendLog(`✓ Authenticated — ${user.username} (role: ${user.role})`);
-      loadingRef.current = null;
-      setLoading(null);
-    });
+      socket.on("authenticated", (user: { username: string; role: string }) => {
+        appendLog(`✓ Authenticated — ${user.username} (role: ${user.role})`);
+        loadingRef.current = null;
+        setLoading(null);
+      });
 
-    socket.on("connect_error", (err: Error) => {
-      // Distinguish auth rejections from server-not-running
-      const isAuthError =
-        err.message === "No token provided" || err.message === "Invalid token";
-      if (isAuthError) {
-        appendLog(`✗ Rejected — ${err.message}`);
-      } else {
-        appendLog(`✗ Could not reach server — is pnpm ws:auth running?`);
-        setServerDown(true);
-      }
-      loadingRef.current = null;
-      setLoading(null);
-      socket.disconnect();
-    });
-  }, [appendLog]);
+      socket.on("connect_error", (err: Error) => {
+        // Distinguish auth rejections from server-not-running
+        const isAuthError =
+          err.message === "No token provided" ||
+          err.message === "Invalid token";
+        if (isAuthError) {
+          appendLog(`✗ Rejected — ${err.message}`);
+        } else {
+          appendLog(`✗ Could not reach server — is pnpm ws:auth running?`);
+          setServerDown(true);
+        }
+        loadingRef.current = null;
+        setLoading(null);
+        socket.disconnect();
+      });
+    },
+    [appendLog]
+  );
 
   return (
     <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
@@ -185,7 +194,9 @@ function AuthDemo() {
         <div className="px-4 py-2 bg-amber-50 border-t border-amber-200">
           <p className="text-xs text-amber-700">
             Server not running. Start it with{" "}
-            <code className="bg-amber-100 px-1 rounded font-mono">pnpm ws:auth</code>{" "}
+            <code className="bg-amber-100 px-1 rounded font-mono">
+              pnpm ws:auth
+            </code>{" "}
             in a terminal.
           </p>
         </div>
@@ -261,17 +272,35 @@ export function AuthSection() {
         <table className="w-full text-xs">
           <thead>
             <tr className="border-b border-slate-200">
-              <th className="text-left py-1.5 text-slate-500 font-semibold w-1/3">Aspect</th>
-              <th className="text-left py-1.5 text-red-500 font-semibold w-1/3">Without middleware</th>
-              <th className="text-left py-1.5 text-green-600 font-semibold w-1/3">With middleware</th>
+              <th className="text-left py-1.5 text-slate-500 font-semibold w-1/3">
+                Aspect
+              </th>
+              <th className="text-left py-1.5 text-red-500 font-semibold w-1/3">
+                Without middleware
+              </th>
+              <th className="text-left py-1.5 text-green-600 font-semibold w-1/3">
+                With middleware
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {[
               ["Who connects?", "Any socket", "Only sockets with valid token"],
-              ["Username source", "Client-supplied (fakeable)", "Server-populated via socket.data"],
-              ["Rejection point", "After connection (or never)", "Before connection event fires"],
-              ["connection handler", "Must re-validate every event", "User guaranteed on socket.data"],
+              [
+                "Username source",
+                "Client-supplied (fakeable)",
+                "Server-populated via socket.data",
+              ],
+              [
+                "Rejection point",
+                "After connection (or never)",
+                "Before connection event fires",
+              ],
+              [
+                "connection handler",
+                "Must re-validate every event",
+                "User guaranteed on socket.data",
+              ],
             ].map(([aspect, without, with_]) => (
               <tr key={aspect}>
                 <td className="py-1.5 text-slate-600 font-medium">{aspect}</td>
@@ -287,17 +316,28 @@ export function AuthSection() {
       <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
         <p className="text-xs font-semibold text-amber-800 mb-1">Key insight</p>
         <p className="text-xs text-amber-700 leading-relaxed">
-          The client passes <code className="bg-amber-100 px-1 rounded font-mono">auth</code> data
+          The client passes{" "}
+          <code className="bg-amber-100 px-1 rounded font-mono">auth</code> data
           during the WebSocket handshake — not as a regular event — via{" "}
           <code className="bg-amber-100 px-1 rounded font-mono">
             io(url, {"{ auth: { token } }"})
-          </code>.
-          The server middleware intercepts this before the{" "}
-          <code className="bg-amber-100 px-1 rounded font-mono">connection</code> event fires.
-          A call to <code className="bg-amber-100 px-1 rounded font-mono">next(new Error(...))</code>{" "}
+          </code>
+          . The server middleware intercepts this before the{" "}
+          <code className="bg-amber-100 px-1 rounded font-mono">
+            connection
+          </code>{" "}
+          event fires. A call to{" "}
+          <code className="bg-amber-100 px-1 rounded font-mono">
+            next(new Error(...))
+          </code>{" "}
           prevents the socket from ever connecting — the client receives a{" "}
-          <code className="bg-amber-100 px-1 rounded font-mono">connect_error</code> with the error
-          message. Because <code className="bg-amber-100 px-1 rounded font-mono">socket.data.user</code>{" "}
+          <code className="bg-amber-100 px-1 rounded font-mono">
+            connect_error
+          </code>{" "}
+          with the error message. Because{" "}
+          <code className="bg-amber-100 px-1 rounded font-mono">
+            socket.data.user
+          </code>{" "}
           is set server-side, clients cannot fake their identity.
         </p>
       </div>

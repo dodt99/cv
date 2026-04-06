@@ -23,11 +23,31 @@ const THEORY_ASCII = `Server
         └── Socket (individual connection)`;
 
 const NS_VS_ROOM = [
-  { feature: "What it is",     ns: "Separate connection endpoint",     room: "Server-side grouping of sockets" },
-  { feature: "Client sees it", ns: "Yes — connect to it explicitly",   room: "No — server-side only" },
-  { feature: "Isolation",      ns: "Full (separate event pipeline)",   room: "Partial (same namespace)" },
-  { feature: "Use case",       ns: "Feature separation (chat/admin)",  room: "Sub-channels within a feature" },
-  { feature: "Default",        ns: "/ (always exists)",                room: "None — created with join()" },
+  {
+    feature: "What it is",
+    ns: "Separate connection endpoint",
+    room: "Server-side grouping of sockets",
+  },
+  {
+    feature: "Client sees it",
+    ns: "Yes — connect to it explicitly",
+    room: "No — server-side only",
+  },
+  {
+    feature: "Isolation",
+    ns: "Full (separate event pipeline)",
+    room: "Partial (same namespace)",
+  },
+  {
+    feature: "Use case",
+    ns: "Feature separation (chat/admin)",
+    room: "Sub-channels within a feature",
+  },
+  {
+    feature: "Default",
+    ns: "/ (always exists)",
+    room: "None — created with join()",
+  },
 ];
 
 // ── Server code snippets ───────────────────────────────────────────────────────
@@ -94,7 +114,9 @@ function RoomsDemo() {
   const [messages, setMessages] = useState<RoomMessage[]>([]);
   const [input, setInput] = useState("");
   const [roomCounts, setRoomCounts] = useState<Record<string, number>>({
-    general: 0, tech: 0, random: 0,
+    general: 0,
+    tech: 0,
+    random: 0,
   });
   const [connected, setConnected] = useState(false);
   const [serverHint, setServerHint] = useState(false);
@@ -108,10 +130,18 @@ function RoomsDemo() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => () => { socketRef.current?.disconnect(); }, []);
+  useEffect(
+    () => () => {
+      socketRef.current?.disconnect();
+    },
+    []
+  );
 
   const addMsg = useCallback((msg: Omit<RoomMessage, "id">) => {
-    setMessages((prev) => [...prev.slice(-199), { ...msg, id: idRef.current++ }]);
+    setMessages((prev) => [
+      ...prev.slice(-199),
+      { ...msg, id: idRef.current++ },
+    ]);
   }, []);
 
   const connect = useCallback(() => {
@@ -128,12 +158,23 @@ function RoomsDemo() {
       setPhase("pick");
     });
     socket.on("connect_error", () => setServerHint(true));
-    socket.on("room_message", (msg: { system?: boolean; username?: string; text: string; timestamp: number }) => {
-      addMsg({ ...msg, timestamp: msg.timestamp ?? Date.now() });
-    });
-    socket.on("room_count", ({ room, count }: { room: string; count: number }) => {
-      setRoomCounts((prev) => ({ ...prev, [room]: count }));
-    });
+    socket.on(
+      "room_message",
+      (msg: {
+        system?: boolean;
+        username?: string;
+        text: string;
+        timestamp: number;
+      }) => {
+        addMsg({ ...msg, timestamp: msg.timestamp ?? Date.now() });
+      }
+    );
+    socket.on(
+      "room_count",
+      ({ room, count }: { room: string; count: number }) => {
+        setRoomCounts((prev) => ({ ...prev, [room]: count }));
+      }
+    );
     socket.on("disconnect", () => setConnected(false));
   }, [username]);
 
@@ -146,8 +187,16 @@ function RoomsDemo() {
   }, []);
 
   const sendMessage = useCallback(() => {
-    if (!input.trim() || !currentRoomRef.current || !socketRef.current?.connected) return;
-    socketRef.current.emit("room_chat", { room: currentRoomRef.current, text: input.trim() });
+    if (
+      !input.trim() ||
+      !currentRoomRef.current ||
+      !socketRef.current?.connected
+    )
+      return;
+    socketRef.current.emit("room_chat", {
+      room: currentRoomRef.current,
+      text: input.trim(),
+    });
     setInput("");
   }, [input]);
 
@@ -166,7 +215,10 @@ function RoomsDemo() {
       <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-sm">
         <p className="text-xs text-gray-500 mb-4">
           Connect with a username, then pick a room. Run{" "}
-          <code className="bg-gray-100 px-1 rounded font-mono">pnpm ws:rooms</code> first.
+          <code className="bg-gray-100 px-1 rounded font-mono">
+            pnpm ws:rooms
+          </code>{" "}
+          first.
         </p>
         <div className="flex gap-2 max-w-sm">
           <input
@@ -187,7 +239,8 @@ function RoomsDemo() {
         {serverHint && (
           <p className="mt-3 text-xs text-amber-600 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
             Could not connect. Run{" "}
-            <code className="font-mono">pnpm ws:rooms</code> in a terminal first.
+            <code className="font-mono">pnpm ws:rooms</code> in a terminal
+            first.
           </p>
         )}
       </div>
@@ -197,7 +250,9 @@ function RoomsDemo() {
   if (phase === "pick") {
     return (
       <div className="p-5 bg-white rounded-xl border border-gray-200 shadow-sm">
-        <p className="text-xs font-semibold text-gray-600 mb-3">Pick a room to join</p>
+        <p className="text-xs font-semibold text-gray-600 mb-3">
+          Pick a room to join
+        </p>
         <div className="flex gap-2">
           {ROOMS.map((room) => (
             <button
@@ -205,14 +260,19 @@ function RoomsDemo() {
               onClick={() => joinRoom(room)}
               className="flex flex-col items-center px-4 py-3 rounded-xl border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all"
             >
-              <span className="text-sm font-semibold text-gray-700">#{room}</span>
+              <span className="text-sm font-semibold text-gray-700">
+                #{room}
+              </span>
               <span className="text-[10px] text-gray-400 mt-1">
                 {roomCounts[room] ?? 0} online
               </span>
             </button>
           ))}
         </div>
-        <button onClick={leave} className="mt-3 text-xs text-gray-400 hover:text-gray-600">
+        <button
+          onClick={leave}
+          className="mt-3 text-xs text-gray-400 hover:text-gray-600"
+        >
           Disconnect
         </button>
       </div>
@@ -247,9 +307,16 @@ function RoomsDemo() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <div className={`w-1.5 h-1.5 rounded-full ${connected ? "bg-green-500" : "bg-gray-300"}`} />
+          <div
+            className={`w-1.5 h-1.5 rounded-full ${
+              connected ? "bg-green-500" : "bg-gray-300"
+            }`}
+          />
           <span className="text-xs text-gray-500">{usernameRef.current}</span>
-          <button onClick={leave} className="text-xs text-gray-400 hover:text-gray-600 ml-1">
+          <button
+            onClick={leave}
+            className="text-xs text-gray-400 hover:text-gray-600 ml-1"
+          >
             Leave
           </button>
         </div>
@@ -258,7 +325,10 @@ function RoomsDemo() {
       <div className="h-52 overflow-y-auto px-4 py-3 space-y-1.5">
         {messages.map((m) =>
           m.system ? (
-            <p key={m.id} className="text-center text-[11px] text-gray-400 italic">
+            <p
+              key={m.id}
+              className="text-center text-[11px] text-gray-400 italic"
+            >
               {m.text}
             </p>
           ) : (
@@ -270,7 +340,9 @@ function RoomsDemo() {
             >
               <span className="text-[10px] text-gray-400 mb-0.5">
                 {m.username === usernameRef.current ? "You" : m.username} ·{" "}
-                {new Date(m.timestamp).toLocaleTimeString("en", { hour12: false })}
+                {new Date(m.timestamp).toLocaleTimeString("en", {
+                  hour12: false,
+                })}
               </span>
               <div
                 className={`max-w-xs px-3 py-1.5 rounded-2xl text-sm ${
@@ -326,7 +398,12 @@ function NsPanel({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [events]);
 
-  useEffect(() => () => { socketRef.current?.disconnect(); }, []);
+  useEffect(
+    () => () => {
+      socketRef.current?.disconnect();
+    },
+    []
+  );
 
   const addEvent = (text: string) =>
     setEvents((prev) => [...prev.slice(-49), text]);
@@ -384,15 +461,23 @@ function NsPanel({
     >
       <div className="flex items-center justify-between px-3 py-2 bg-gray-50 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <div className={`w-1.5 h-1.5 rounded-full ${connected ? c.dot : "bg-gray-300"}`} />
-          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${c.badge}`}>
+          <div
+            className={`w-1.5 h-1.5 rounded-full ${
+              connected ? c.dot : "bg-gray-300"
+            }`}
+          />
+          <span
+            className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${c.badge}`}
+          >
             {namespace}
           </span>
         </div>
         <button
           onClick={connected ? disconnect : connect}
           className={`text-[10px] font-medium px-2 py-1 rounded ${
-            connected ? "text-gray-500 hover:text-gray-700" : `${c.btn} text-white`
+            connected
+              ? "text-gray-500 hover:text-gray-700"
+              : `${c.btn} text-white`
           }`}
         >
           {connected ? "Disconnect" : "Connect"}
@@ -507,13 +592,21 @@ export function RoomsSection() {
         <pre className="text-[11px] font-mono text-slate-600 leading-relaxed mb-4">
           {THEORY_ASCII}
         </pre>
-        <p className="text-xs font-semibold text-slate-700 mb-2">Namespace vs Room</p>
+        <p className="text-xs font-semibold text-slate-700 mb-2">
+          Namespace vs Room
+        </p>
         <table className="w-full text-xs">
           <thead>
             <tr className="border-b border-slate-200">
-              <th className="text-left py-1.5 text-slate-500 font-semibold w-1/3">Feature</th>
-              <th className="text-left py-1.5 text-blue-600 font-semibold w-1/3">Namespace</th>
-              <th className="text-left py-1.5 text-purple-600 font-semibold w-1/3">Room</th>
+              <th className="text-left py-1.5 text-slate-500 font-semibold w-1/3">
+                Feature
+              </th>
+              <th className="text-left py-1.5 text-blue-600 font-semibold w-1/3">
+                Namespace
+              </th>
+              <th className="text-left py-1.5 text-purple-600 font-semibold w-1/3">
+                Room
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -535,8 +628,8 @@ export function RoomsSection() {
         </p>
         <div className="mb-2 p-3 bg-blue-50 border border-blue-100 rounded-lg">
           <p className="text-xs text-blue-700">
-            <strong>Key insight:</strong> Rooms are <em>server-side only</em>. The
-            client never calls{" "}
+            <strong>Key insight:</strong> Rooms are <em>server-side only</em>.
+            The client never calls{" "}
             <code className="bg-blue-100 px-1 rounded">.join()</code> — it sends
             an event, and the server decides which room to place it in. Open two
             tabs to see isolation in action.
@@ -565,8 +658,14 @@ export function RoomsSection() {
 
       {/* Code blocks */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <CodeBlock filename="socketio-rooms.js (rooms)" code={ROOMS_SERVER_CODE} />
-        <CodeBlock filename="socketio-rooms.js (namespaces)" code={NS_SERVER_CODE} />
+        <CodeBlock
+          filename="socketio-rooms.js (rooms)"
+          code={ROOMS_SERVER_CODE}
+        />
+        <CodeBlock
+          filename="socketio-rooms.js (namespaces)"
+          code={NS_SERVER_CODE}
+        />
       </div>
       <div className="mt-3">
         <CodeBlock filename="client.ts" code={NS_CLIENT_CODE} />

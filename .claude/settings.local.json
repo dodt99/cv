@@ -11,7 +11,17 @@
       "Bash(grep -E '\\\\.\\(js|json\\)$')",
       "Bash(timeout 5 node server/socketio-server.js)",
       "Bash(echo \"exit code: $?\")",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(node:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(git:*)",
+      "Bash(grep -n \"id=\" /c/Users/admin/Desktop/CV/my-app/app/exercises/react-internals/components/*.tsx)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
+      "Bash(kill %1)",
+      "Bash(echo \"Exit code: $?\")"
     ]
   }
 }
