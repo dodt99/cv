@@ -70,7 +70,6 @@ const navGroups = [
             <path d="M2 8.5l10 7 10-7" />
           </svg>
         ),
-        badge: "New",
       },
     ],
   },
@@ -178,7 +177,6 @@ const navGroups = [
             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
           </svg>
         ),
-        badge: "New",
       },
       {
         href: "/exercises/slots",
@@ -199,7 +197,6 @@ const navGroups = [
             <rect x="13" y="13" width="8" height="8" rx="1" />
           </svg>
         ),
-        badge: "New",
       },
       {
         href: "/image-optimization",
@@ -253,7 +250,6 @@ const navGroups = [
             />
           </svg>
         ),
-        badge: "New",
       },
       {
         href: "/exercises/websocket",
@@ -275,7 +271,6 @@ const navGroups = [
             <line x1="12" y1="20" x2="12.01" y2="20" />
           </svg>
         ),
-        badge: "New",
       },
     ],
   },
