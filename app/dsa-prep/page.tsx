@@ -264,7 +264,8 @@ function isAnagram2(s: string, t: string): boolean {
           {
             input: "prices = [7,1,5,3,6,4]",
             output: "5",
-            explanation: "Mua ngày 2 (giá = 1) và bán ngày 5 (giá = 6), lợi nhuận = 6-1 = 5.",
+            explanation:
+              "Mua ngày 2 (giá = 1) và bán ngày 5 (giá = 6), lợi nhuận = 6-1 = 5.",
           },
         ],
         solution: `function maxProfit(prices: number[]): number {
@@ -654,7 +655,8 @@ function maxDepthBFS(root: TreeNode | null): number {
           {
             input: "n = 2",
             output: "2",
-            explanation: "Có hai cách để leo lên đỉnh.\n1. 1 bước + 1 bước\n2. 2 bước",
+            explanation:
+              "Có hai cách để leo lên đỉnh.\n1. 1 bước + 1 bước\n2. 2 bước",
           },
           {
             input: "n = 3",
@@ -704,10 +706,349 @@ function climbStairsDP(n: number): number {
   },
 ];
 
-function DifficultyBadge({ difficulty }: { difficulty: "Easy" | "Medium" | "Hard" }) {
+type LearningPhase = {
+  id: string;
+  label: string;
+  title: string;
+  color: string;
+  resources: {
+    name: string;
+    icon: string;
+    description: string;
+    url: string;
+    tags: ("free" | "paid" | "vn" | "en" | "video" | "book" | "practice")[];
+  }[];
+};
+
+const learningPhases: LearningPhase[] = [
+  {
+    id: "phase1",
+    label: "Giai đoạn 1",
+    title: "Nền tảng lý thuyết",
+    color: "emerald",
+    resources: [
+      {
+        name: "Kênh DSATVN (YouTube)",
+        icon: "🎬",
+        description:
+          "Giảng dạy DSA bằng tiếng Việt, từ array đến graph, rất phù hợp người mới bắt đầu",
+        url: "https://www.youtube.com/@DSATVN",
+        tags: ["free", "vn", "video"],
+      },
+      {
+        name: "VNOI Wiki",
+        icon: "📖",
+        description:
+          "Tài liệu lý thuyết DSA đầy đủ nhất tiếng Việt, do cộng đồng lập trình thi đấu Việt Nam xây dựng",
+        url: "https://vnoi.info/wiki/algo/basic",
+        tags: ["free", "vn", "book"],
+      },
+      {
+        name: "CS50 — Harvard (edX)",
+        icon: "🎓",
+        description:
+          "Khóa nhập môn kinh điển, có phần về cấu trúc dữ liệu và thuật toán sắp xếp, tìm kiếm",
+        url: "https://cs50.harvard.edu/x/",
+        tags: ["free", "en", "video"],
+      },
+      {
+        name: "VisuAlgo",
+        icon: "👁️",
+        description:
+          "Trực quan hóa các thuật toán và cấu trúc dữ liệu bằng animation — hiểu nhanh hơn rất nhiều",
+        url: "https://www.visualgo.net/en",
+        tags: ["free", "en"],
+      },
+      {
+        name: "GeeksforGeeks — DSA",
+        icon: "📄",
+        description:
+          "Tham khảo lý thuyết nhanh với code mẫu C++/Java/Python cho từng chủ đề",
+        url: "https://www.geeksforgeeks.org/data-structures/",
+        tags: ["free", "en", "book"],
+      },
+    ],
+  },
+  {
+    id: "phase2",
+    label: "Giai đoạn 2",
+    title: "Khóa học có cấu trúc",
+    color: "blue",
+    resources: [
+      {
+        name: "NeetCode Roadmap",
+        icon: "🗺️",
+        description:
+          "Lộ trình học theo chủ đề rất rõ ràng kèm video giải từng bài, phổ biến nhất để chuẩn bị phỏng vấn",
+        url: "https://neetcode.io/roadmap",
+        tags: ["free", "en", "video", "practice"],
+      },
+      {
+        name: "Algorithms Specialization — Stanford (Coursera)",
+        icon: "🎓",
+        description:
+          "4 khóa học chuyên sâu từ Tim Roughgarden, nền tảng lý thuyết vững chắc kèm bài tập lập trình",
+        url: "https://www.coursera.org/specializations/algorithms",
+        tags: ["paid", "en", "video"],
+      },
+      {
+        name: "DSA Masterclass — Colt Steele (Udemy)",
+        icon: "🛒",
+        description:
+          "Giảng dạy bằng JavaScript, rất phù hợp cho web developer, giải thích trực quan dễ hiểu",
+        url: "https://www.udemy.com/course/js-algorithms-and-data-structures-masterclass/",
+        tags: ["paid", "en", "video"],
+      },
+      {
+        name: "Techmaster Vietnam",
+        icon: "🇻🇳",
+        description:
+          "Khóa học DSA tiếng Việt với giảng viên hỗ trợ trực tiếp, phù hợp cho người đi làm",
+        url: "https://techmaster.vn",
+        tags: ["paid", "vn", "video"],
+      },
+    ],
+  },
+  {
+    id: "phase3",
+    label: "Giai đoạn 3",
+    title: "Sách tham khảo chuyên sâu",
+    color: "purple",
+    resources: [
+      {
+        name: "CLRS — Introduction to Algorithms",
+        icon: "📚",
+        description:
+          "Kinh thánh về thuật toán, phân tích độ phức tạp cực kỳ chặt chẽ. Dùng như sách tham khảo, không cần đọc hết",
+        url: "https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/",
+        tags: ["paid", "en", "book"],
+      },
+      {
+        name: "CP-Algorithms",
+        icon: "⚡",
+        description:
+          "Tài liệu lý thuyết + code C++ chuẩn cho competitive programming, phong phú và cập nhật liên tục",
+        url: "https://cp-algorithms.com/",
+        tags: ["free", "en", "book"],
+      },
+      {
+        name: "The Algorithm Design Manual — Skiena",
+        icon: "📗",
+        description:
+          "Tiếp cận thực tế hơn CLRS, nhiều ví dụ ứng dụng thực tế, phù hợp kỹ sư phần mềm",
+        url: "https://www.algorist.com/",
+        tags: ["paid", "en", "book"],
+      },
+    ],
+  },
+  {
+    id: "phase4",
+    label: "Giai đoạn 4",
+    title: "Luyện bài tập thực chiến",
+    color: "orange",
+    resources: [
+      {
+        name: "LeetCode",
+        icon: "⚔️",
+        description:
+          "Nền tảng số 1 để luyện phỏng vấn, 3000+ bài, có community editorial và discuss rất giá trị",
+        url: "https://leetcode.com/",
+        tags: ["free", "en", "practice"],
+      },
+      {
+        name: "Codeforces",
+        icon: "🏆",
+        description:
+          "Nền tảng competitive programming hàng đầu, contest mỗi tuần, rèn tư duy giải thuật rất tốt",
+        url: "https://codeforces.com/",
+        tags: ["free", "en", "practice"],
+      },
+      {
+        name: "VNOJ — VNOI Online Judge",
+        icon: "🇻🇳",
+        description:
+          "Hệ thống bài tập tiếng Việt, nhiều bài từ các kỳ thi HSG, ACM Việt Nam, thích hợp luyện tập trong nước",
+        url: "https://vnoj.ml/",
+        tags: ["free", "vn", "practice"],
+      },
+      {
+        name: "HackerRank — DSA",
+        icon: "🟢",
+        description:
+          "Bài tập theo từng chủ đề cụ thể (Array, LinkedList, Tree...), có hướng dẫn, phù hợp người mới",
+        url: "https://www.hackerrank.com/domains/data-structures",
+        tags: ["free", "en", "practice"],
+      },
+      {
+        name: "InterviewBit",
+        icon: "💼",
+        description:
+          "Bài tập được cấu trúc theo lộ trình phỏng vấn kỹ sư, có gợi ý và giải thích từng bước",
+        url: "https://www.interviewbit.com/courses/programming/",
+        tags: ["free", "en", "practice"],
+      },
+    ],
+  },
+];
+
+function ResourceTag({ tag }: { tag: string }) {
+  const tagStyles: Record<string, string> = {
+    free: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    paid: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+    vn: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    en: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+    video: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
+    book: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+    practice:
+      "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+  };
+
+  const tagLabels: Record<string, string> = {
+    free: "Miễn phí",
+    paid: "Trả phí",
+    vn: "Tiếng Việt",
+    en: "Tiếng Anh",
+    video: "Video",
+    book: "Sách/Tài liệu",
+    practice: "Luyện đề",
+  };
+
+  return (
+    <span
+      className={`text-xs px-2 py-0.5 rounded font-medium ${tagStyles[tag]}`}
+    >
+      {tagLabels[tag]}
+    </span>
+  );
+}
+
+function LearningGuide() {
+  const [openPhases, setOpenPhases] = useState<Set<string>>(new Set());
+
+  const togglePhase = (phaseId: string) => {
+    setOpenPhases((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(phaseId)) {
+        newSet.delete(phaseId);
+      } else {
+        newSet.add(phaseId);
+      }
+      return newSet;
+    });
+  };
+
+  const phaseColors: Record<string, { header: string; label: string }> = {
+    emerald: {
+      header: "bg-emerald-50 dark:bg-emerald-950/50",
+      label: "text-emerald-700 dark:text-emerald-400",
+    },
+    blue: {
+      header: "bg-blue-50 dark:bg-blue-950/50",
+      label: "text-blue-700 dark:text-blue-400",
+    },
+    purple: {
+      header: "bg-purple-50 dark:bg-purple-950/50",
+      label: "text-purple-700 dark:text-purple-400",
+    },
+    orange: {
+      header: "bg-orange-50 dark:bg-orange-950/50",
+      label: "text-orange-700 dark:text-orange-400",
+    },
+  };
+
+  return (
+    <div className="bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-6 mb-8">
+      <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
+        📚 Hướng dẫn cách học DSA hiệu quả
+      </h2>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        <ResourceTag tag="free" />
+        <ResourceTag tag="paid" />
+        <ResourceTag tag="vn" />
+        <ResourceTag tag="en" />
+        <ResourceTag tag="video" />
+        <ResourceTag tag="book" />
+        <ResourceTag tag="practice" />
+      </div>
+
+      <div className="space-y-4">
+        {learningPhases.map((phase) => {
+          const isOpen = openPhases.has(phase.id);
+          const colors = phaseColors[phase.color];
+
+          return (
+            <div
+              key={phase.id}
+              className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden"
+            >
+              <button
+                onClick={() => togglePhase(phase.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${colors.header}`}
+              >
+                <span className={`text-sm font-medium ${colors.label}`}>
+                  {phase.label}
+                </span>
+                <span className="text-base font-semibold text-zinc-900 dark:text-white flex-1">
+                  {phase.title}
+                </span>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {phase.resources.length} nguồn
+                </span>
+                <span
+                  className={`text-zinc-400 transition-transform ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  ▼
+                </span>
+              </button>
+
+              {isOpen && (
+                <div className="p-3 space-y-2">
+                  {phase.resources.map((resource, idx) => (
+                    <a
+                      key={idx}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex gap-3 p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors"
+                    >
+                      <span className="text-xl shrink-0">{resource.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-zinc-900 dark:text-white mb-1">
+                          {resource.name}
+                        </div>
+                        <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-2">
+                          {resource.description}
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {resource.tags.map((tag) => (
+                            <ResourceTag key={tag} tag={tag} />
+                          ))}
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function DifficultyBadge({
+  difficulty,
+}: {
+  difficulty: "Easy" | "Medium" | "Hard";
+}) {
   const colors = {
     Easy: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-    Medium: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+    Medium:
+      "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
     Hard: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
   };
 
@@ -865,9 +1206,12 @@ export default function DSAPrep() {
             Data Structures & Algorithms
           </h1>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Ôn tập và chuẩn bị phỏng vấn DSA cho Developer • {totalProblems} bài tập
+            Ôn tập và chuẩn bị phỏng vấn DSA cho Developer • {totalProblems} bài
+            tập
           </p>
         </div>
+
+        <LearningGuide />
 
         <div className="mb-6">
           <input
