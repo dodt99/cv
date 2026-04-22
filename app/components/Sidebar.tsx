@@ -69,7 +69,7 @@ const navGroups = [
             <line x1="12" y1="19" x2="20" y2="19" />
           </svg>
         ),
-        badge: "New",
+        // badge: "New",
       },
       {
         href: "/angular",
@@ -90,6 +90,26 @@ const navGroups = [
             <path d="M2 8.5l10 7 10-7" />
           </svg>
         ),
+      },
+      {
+        href: "/basic-performance",
+        label: "Basic Performance",
+        icon: (
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="4 17 10 11 4 5" />
+            <line x1="12" y1="19" x2="20" y2="19" />
+          </svg>
+        ),
+        badge: "New",
       },
     ],
   },
