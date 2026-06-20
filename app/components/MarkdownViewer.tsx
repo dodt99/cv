@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
+import { slugifyHeading } from "./markdown-slug";
 
 export default function MarkdownViewer({ content }: { content: string }) {
   return (
@@ -17,12 +18,19 @@ export default function MarkdownViewer({ content }: { content: string }) {
               {children}
             </h1>
           ),
-          h2: ({ children }) => (
-            <h2 className="text-base font-semibold text-gray-900 mt-7 mb-2.5 flex items-center gap-2">
-              <span className="w-1 h-4 bg-blue-500 rounded-full inline-block shrink-0"></span>
-              {children}
-            </h2>
-          ),
+          h2: ({ children }) => {
+            const text = String(children);
+            const id = slugifyHeading(text);
+            return (
+              <h2
+                id={id}
+                className="text-base font-semibold text-gray-900 mt-7 mb-2.5 flex items-center gap-2 scroll-mt-24"
+              >
+                <span className="w-1 h-4 bg-blue-500 rounded-full inline-block shrink-0"></span>
+                {children}
+              </h2>
+            );
+          },
           h3: ({ children }) => (
             <h3 className="text-sm font-semibold text-gray-800 mt-5 mb-2">
               {children}
