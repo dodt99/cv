@@ -133,6 +133,10 @@ export default function CvContent() {
             <span className={styles.skVal}>
               SSR/SSG, Code Splitting, Lazy Loading, Core Web Vitals
             </span>
+            <span className={styles.skLabel}>Backend</span>
+            <span className={styles.skVal}>
+              Node.js, Express.js, Java, Spring Boot, REST APIs, MySQL
+            </span>
             <span className={styles.skLabel}>Tools & CI</span>
             <span className={styles.skVal}>
               Git, GitHub Actions, GitLab CI, Docker, Nginx, Vercel
@@ -200,8 +204,13 @@ export default function CvContent() {
                 using ApexCharts and Material UI.
               </li>
               <li>
-                Integrated backend APIs and maintained stable UI under{" "}
-                <strong>continuous real-time data updates</strong>.
+                Developed and maintained <strong>Spring Boot REST APIs</strong>{" "}
+                for energy trading modules.
+              </li>
+              <li>
+                Integrated React frontend with Java backend services for
+                real-time power system data; maintained stable UI under{" "}
+                <strong>continuous data updates</strong>.
               </li>
               <li>
                 Built and maintained frontend modules across projects using{" "}
@@ -302,9 +311,14 @@ export default function CvContent() {
                     components, ensuring stable UI under continuous real-time
                     data streams.
                   </li>
+                  <li>
+                    Built REST endpoints with Spring Boot for energy data
+                    services; integrated with React dashboards for real-time
+                    monitoring.
+                  </li>
                 </ul>
                 <div className={styles.tech}>
-                  React.js · Redux · Material UI · ApexCharts
+                  React.js · Spring Boot · Redux · Material UI · ApexCharts
                 </div>
               </div>
 
